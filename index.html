@@ -23,13 +23,14 @@
 			font-weight: bold;
 			margin-top: 5px;
 			letter-spacing: 0.5px;
-}
+		}
 
 		h1 { 
 			color: #d63031; /* Thay mã màu ở đây (Ví dụ: #0984e3 là xanh dương đậm) */
 			text-align: center;
 			font-size: 2.2rem;
 			margin-top: 15px;
+			margin-bottom: 5px;
 			font-weight: 800;
 }		
             /*--don-vi-color: #2d3436; * Màu chữ tên đơn vị */
@@ -98,7 +99,10 @@
 		
 	/* Khung chứa ảnh và tên bên trái */
 		.avatar-container {
-			display: flex; flex-direction: column; align-items: center; gap: 10px;
+			display: flex; 
+			flex-direction: column; 
+			align-items: center; 
+			gap: 10px;
 		}
 
 	/* Định dạng ảnh đại diện thật */
@@ -151,27 +155,84 @@
 		.stat-box b {
 			font-size: 1.4rem;
 			color: #ffeaa7; /* Màu vàng nhạt cho con số thêm nổi bật */
-		}		
-	
+		}
+		
+		.header-relative {
+			position: relative; /* Làm gốc cho logo */
+			width: 100%;
+			min-height: 100px;
+			display: flex;
+			align-items: center;
+			justify-content: center; /* Chữ vẫn ở giữa */
+			margin-bottom: 10px;
+		}
+		
+		/* Kích thước Logo */
+		.school-logo-left {
+			position: absolute;
+			left: 20px; /* Cách lề trái 20px */
+			top: 65%;
+			transform: translateY(-50%); /* Căn giữa theo chiều dọc */
+			width: 180px; /* Bạn có thể tăng lên 100px nếu muốn to hơn */
+			height: auto;
+			z-index: 10;
+		}
+
+		.slogan-container {
+			/*background-color: #004a99;*/ /* Nền xanh dương đậm */
+			color: #004a99; /*#ffff00;*/           /* Chữ màu vàng Gold */
+			/*padding: 12px 0;*/
+			font-weight: bold;
+			font-size: 2.2rem;
+			margin: 0 auto 20px;           /* Tạo khoảng cách trên dưới */
+			border-radius: 5px;       /* Bo góc nhẹ cho tinh tế */
+			box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+		}
+
+		.slogan-container marquee {
+			display: block;
+		}
+
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="don-vi">ỦY BAN NHÂN DÂN PHƯỜNG XUÂN HÒA</div>
-	<div class="ten-truong">TRƯỜNG TIỂU HỌC NGUYỄN THÁI SƠN</div>
-    <h1>HỆ THỐNG BÀI GIẢNG ĐIỆN TỬ</h1>
-	<div class="total-stats">
+    <div class="header-relative">
+        <!-- Logo nằm độc lập bên trái -->
+        <img src="images/logo_512.png" class="school-logo-left" onerror="this.style.display='none'">
+		
+        <!-- Nội dung chữ -->
+		<div class="header-content-center">		
+			<div class="don-vi">ỦY BAN NHÂN DÂN PHƯỜNG XUÂN HÒA</div>
+			<div class="ten-truong">TRƯỜNG TIỂU HỌC NGUYỄN THÁI SƠN</div>
+			<h1>HỆ THỐNG BÀI GIẢNG ĐIỆN TỬ</h1>
+	
+		</div>
+	</div>
+	
+	<!-- Dòng chữ chạy: Vàng trên nền xanh -->
+			
+		<div style="color: #004a99; padding: 8px 0; font-weight: bold; font-size: 2.2rem; margin: 10px 0; border-radius: 5px;">
+			<marquee behavior="scroll" direction="left" scrollamount="12">
+				Trong cách học phải lấy tự học làm cốt - Hồ Chí Minh
+			</marquee>
+		</div>		
+	
+		<div class="total-stats">
 		<div class="stat-box">
 			🚀 Tổng số: <span id="total-lessons">0</span> bài giảng hiện có
 		</div>
-	</div>
 
+	</div>
+	
     <div class="search-wrapper">
         <input type="text" id="teacherSearch" placeholder="🔍 Tìm kiếm tên giáo viên...">
     </div>
-    
+ 
     <div id="teacher-list" class="grid-container"></div>
+	
+	
 </div>
 
 <script>
