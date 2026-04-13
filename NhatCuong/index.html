@@ -136,13 +136,16 @@
 			});
 
 		// 2. Tăng số khi Click
-		item.onclick = function() {
-			//var hitUrl = "https://countapi.xyz" + namespace + "/" + lessonKey;
+		item.onclick = function(e) {
+			e.preventDefault(); // chặn mở link ngay
+			
 			fetch(apiURL+ "/up")
 				.then(res => res.json())
 				.then(data => {
 					var span = document.getElementById("count-" + lessonId);
 					if (span) span.innerText = data.value;
+					
+					window.open(l.url, "_blank"); // mở sau khi tăng view
 				})
 				.catch(err => console.error(err));
 			
