@@ -194,12 +194,27 @@
 		}
 
 			/* Tối ưu Mobile: Khi chạm tay vào */
-			@media (max-width: 768px) {
-			.lesson-item:active .view-stats {
-			background-color: #007bff;
-			color: white;
-			}
+		@media (max-width: 480px) {
+			/* Thu nhỏ Logo để không đè lên chữ */
+		.header-logo { 
+			width: 80px !important; 
+			height: auto;
+			margin-bottom: 10px;
 		}
+
+			/* Chỉnh lại tiêu đề trường */
+		.school-name {
+			font-size: 14px !important;
+			line-height: 1.4;
+		}
+
+			/* Banner tổng số bài giảng */
+		.total-banner {
+			width: 90% !important;
+			padding: 10px !important;
+			font-size: 13px !important;
+		}
+	}
     </style>
 </head>
 <body>
