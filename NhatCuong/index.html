@@ -106,7 +106,7 @@
         //item.innerText = l.name;
 		
 		// Tạo ID từ tên bài giảng (Xóa dấu, chuyển thành chữ thường để làm API ID)
-		const lessonId = encodeURIComponent(l.name.replace(/\s+/g, '-').toLowerCase());
+		const lessonId = l.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').toLowerCase().replace(/[^a-z0-9-]/g, '');
 	
 		// QUAN TRỌNG: Dùng innerHTML để chèn cấu trúc biểu tượng và lượt xem
 		// Bạn thay con số lượt xem thực tế vào chỗ "0" hoặc dùng l.views nếu đã khai báo
@@ -124,24 +124,26 @@
 		const countElement = document.getElementById(`count-${lessonId}`);
 
 		// Dùng link này để lấy số (chú ý dấu huyền ` ở hai đầu)
-		fetch(`https://countapi.it{namespace}/${lessonKey}`)
+		fetch(`https://countapi.dev{namespace}/${lessonId}`)
 			.then(res => res.json())
-			.then(res => {
-				if (countElement) countElement.innerText = res.value || 0;
+			.then(data => {
+				const display = document.getElementById(`count-${lessonId}`);
+				if (diaplay) diaplay.innerText = data.count || 0;
 			})
 			.catch(() => {
 				// Nếu chưa có thì hiện số 0
-				if (countElement) countElement.innerText = 0;
+				console.log("Bài giảng mới đang khởi tạo...");
 			});
 
 		// 2. Tăng số khi Click
-		item.onclick = function(e) {
-			fetch(`https://countapi.it{namespace}/${lessonKey}`)
+		item.addEventListener('click', () => {
+			fetch(`https://counterapi.dev{namespace}/${lessonId}/up`)
 				.then(res => res.json())
-				.then(res => {
-                if (countElement) countElement.innerText = res.value;
+				.then(data => {
+					const display = document.getElementById(`count-${lessonId}`);
+					if (display) display.innerText = data.count;
             });
-		};
+		});
     
 		
 		
