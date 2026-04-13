@@ -131,7 +131,7 @@
 
 			// 2. Khi Click: Tăng lượt xem lên
 			item.onclick = (e) => {
-				fetch(`https://countapi.it{namespace}/${lessonId}`);
+				fetch(`https://countapi.it{namespace}/${lessonId}`)
 				.then(res => res.json())
 				.then(res => {
                 document.getElementById(`count-${lessonId}`).innerText = res.value;
