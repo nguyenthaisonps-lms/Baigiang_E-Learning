@@ -112,21 +112,30 @@
 		// Bạn thay con số lượt xem thực tế vào chỗ "0" hoặc dùng l.views nếu đã khai báo
 		item.innerHTML = `
 			
-			<span class="view-stats">👁️ ${l.views || 0} lượt xem</span>
+			//<span class="view-stats">👁️ ${l.views || 0} lượt xem</span>//
+			<span class="view-stats">👁️ <span id="count-${lessonId}">0</span> lượt xem</span>
 			<span class="lesson-name">${l.name}</span>
 			<span class="start-text"></span>
     `;		
             // 1. Lấy số lượt xem hiện có từ API để hiển thị
-			fetch(`https://countapi.xyz{namespace}/${lessonId}`)
+			fetch(`https://countapi.it{namespace}/${lessonId}`)
 				.then(res => res.json())
 				.then(res => {
 					document.getElementById(`count-${lessonId}`).innerText = res.value || 0;
 				})
-				.catch(() => {}); // Nếu chưa có lượt xem nào thì mặc định là 0
+				.catch(() => {
+					// Nếu bài giảng mới hoàn toàn, ta tạo mới trên hệ thống
+				fetch(`https://countapi.it{namespace}&key=${lessonId}&value=0`);
+				
+				}); 
 
 			// 2. Khi Click: Tăng lượt xem lên
-			item.onclick = () => {
-				fetch(`https://countapi.xyz{namespace}/${lessonId}`);
+			item.onclick = (e) => {
+				fetch(`https://countapi.it{namespace}/${lessonId}`);
+				.then(res => res.json())
+				.then(res => {
+                document.getElementById(`count-${lessonId}`).innerText = res.value;
+            });
     };
 		
 		
