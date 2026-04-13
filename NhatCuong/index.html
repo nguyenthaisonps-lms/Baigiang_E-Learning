@@ -121,7 +121,7 @@
 
 
 
-		var apiURL = "https://counterapi.dev/" + lessonId;
+		var apiURL = "https://counterapi.dev/" + namespace + "/" + lessonId;
 		//var getUrl = "https://api.countapi.xyz/get/" + namespace + "/" + lessonKey;
 
 		// Dùng link này để lấy số (chú ý dấu huyền ` ở hai đầu)
@@ -131,9 +131,8 @@
 				var span = document.getElementById("count-" + lessonId);
 				if (span) span.innerText = data.value || 0;
 			})
-			.catch(err => {
-				console.error("Lỗi load view:", err);
-			});
+			.catch(function() { console.log("Bài mới"); });
+				
 
 		// 2. Tăng số khi Click
 		item.onclick = function() {
@@ -145,8 +144,8 @@
 			});	
 		};
 			
-		
-		listContainer.appendChild(item);
+			listContainer.appendChild(item);
+				
     });
 </script>
 
