@@ -179,8 +179,8 @@
 		}
 
 		.slogan-container {
-			/*background-color: #004a99;*/ /* Nền xanh dương đậm */
-			color: #004a99; /*#ffff00;*/           /* Chữ màu vàng Gold */
+			background-color: blue; /* Nền xanh dương đậm */
+			color: #ffff00;           /* Chữ màu vàng Gold */
 			/*padding: 12px 0;*/
 			font-weight: bold;
 			font-size: 2.2rem;
@@ -193,6 +193,13 @@
 			display: block;
 		}
 
+			/* Tối ưu Mobile: Khi chạm tay vào */
+			@media (max-width: 768px) {
+			.lesson-item:active .view-stats {
+			background-color: #007bff;
+			color: white;
+			}
+		}
     </style>
 </head>
 <body>
@@ -213,20 +220,21 @@
 	
 	<!-- Dòng chữ chạy: Vàng trên nền xanh -->
 			
-		<div style="color: #004a99; padding: 8px 0; font-weight: bold; font-size: 2.2rem; margin: 10px 0; border-radius: 5px;">
+		<div style="background-color: blue; color: #ffff00; padding: 8px 0; font-weight: bold; font-size: 2.2rem; margin: 10px 0; border-radius: 5px;">
+			<marquee onmouseover="this.stop()" onmouseout="this.start()"
 			<marquee behavior="scroll" direction="left" scrollamount="12">
-				Trong cách học phải lấy tự học làm cốt - Hồ Chí Minh
+				"Trong cách học phải lấy tự học làm cốt" - Hồ Chí Minh
 			</marquee>
 		</div>		
 	
-		<div class="total-stats">
+		<div class="total-stats" style="margin-top: 5px;">
 		<div class="stat-box">
 			🚀 Tổng số: <span id="total-lessons">0</span> bài giảng hiện có
 		</div>
 
 	</div>
 	
-    <div class="search-wrapper">
+    <div class="search-wrapper" style="margin-top: -20px;">
         <input type="text" id="teacherSearch" placeholder="🔍 Tìm kiếm tên giáo viên...">
     </div>
  
@@ -238,8 +246,8 @@
 <script>
     // CÁCH THÊM ẢNH: Bạn để ảnh vào thư mục 'images' và ghi tên file vào 'img'
     let danhSachGV = [
-        { name: "Thầy Thái Nhật Cường", folder: "NhatCuong", count: 2, img: "NhatCuong.JPG" },
-        { name: "Cô Nguyễn Thị Thanh Lan", folder: "ThanhLan", count: 8, img: "ThanhLan.jpg" },
+        { name: "Thầy Thái Nhật Cường", folder: "NhatCuong", count: 3, img: "NhatCuong.JPG" },
+        { name: "Cô Nguyễn Thị Thanh Lan", folder: "ThanhLan", count: 2, img: "ThanhLan.jpg" },
         { name: "Cô Nguyễn Thị Thanh Xuân", folder: "ThanhXuan", count: 1, img: "default-avatar.png" },
         { name: "Cô Nguyễn Thị Thùy Dương", folder: "THUYDUONG", count: 5, img: "ThuyDuong.jpg" },
         { name: "Thầy Quốc Bảo", folder: "gv-5", count: 0, img: "default-avatar.png" },

@@ -32,6 +32,44 @@
 
         .lesson-item::before { content: "📘"; margin-right: 15px; font-size: 1.2rem; }
         .lesson-item::after { content: "Bắt đầu học ➔"; font-size: 0.8rem; color: var(--primary); font-weight: normal; }
+
+		.view-stats {
+			font-size: 0.8rem;
+			color: #636e72;
+			background: #f1f2f6;
+			padding: 3px 12px;
+			border-radius: 10px;
+			margin-right: 20px; /* Khoảng cách với tên bài giảng */
+			margin-left: 10px;  /* Khoảng cách với icon cuốn sách */
+			font-weight: normal;
+			min-width: 80px;
+			text-align: center;
+			white-space: nowrap;
+		}
+
+		/* Đẩy nút "Bắt đầu học" sang tận cùng bên phải */
+		.start-text {
+			margin-left: auto; 
+			color: var(--primary-color);
+			font-size: 0.85rem;
+			font-weight: normal;
+		}
+		
+		/* Khi di chuột vào cả khối bài giảng, ô lượt xem sẽ đổi màu */
+		.lesson-item:hover .view-stats {
+			background-color: #007bff; /* Đổi sang màu xanh */
+			color: white;              /* Chữ sang màu trắng */
+			box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+		}
+
+		/* Tối ưu Mobile: Khi chạm tay vào */
+		@media (max-width: 768px) {
+			.lesson-item:active .view-stats {
+			background-color: #007bff;
+			color: white;
+			}
+		}
+		
     </style>
 </head>
 <body>
@@ -50,10 +88,11 @@
 <script>
     // NHẬP DANH SÁCH BÀI GIẢNG VÀ LINK MOODLE TẠI ĐÂY
     const lessons = [
-        { name: "Toán 4 - Tiết 58: Em làm được những gì?", url: "https://hoctructuyen.nguyenthaisonps.edu.vn/mod/url/view.php?id=363" },
+        { name: "Toán 4 - Tiết 58: Em làm được những gì?", url: "https://hoctructuyen.nguyenthaisonps.edu.vn/course/view.php?id=77" },
 		{ name: "Toán 5 - Bài 21: So sánh 2 số thập phân", url: "https://hoctructuyen.nguyenthaisonps.edu.vn/course/view.php?id=45" }
         ];
     const listContainer = document.getElementById('lesson-list');
+	const namespace = "nguyenthaison_edu_vn"; // Tên định danh cho trường bạn
 
     lessons.forEach(l => {
         const item = document.createElement('a');
@@ -61,7 +100,34 @@
         item.className = 'lesson-item';
         // Mở bài giảng Moodle ở tab mới để không mất trang Netlify
         item.target = "_blank"; 
-        item.innerText = l.name;
+		
+        //item.innerText = l.name;
+		
+		// Tạo ID từ tên bài giảng (Xóa dấu, chuyển thành chữ thường để làm API ID)
+		const lessonId = encodeURIComponent(l.name.replace(/\s+/g, '-').toLowerCase());
+	
+		// QUAN TRỌNG: Dùng innerHTML để chèn cấu trúc biểu tượng và lượt xem
+		// Bạn thay con số lượt xem thực tế vào chỗ "0" hoặc dùng l.views nếu đã khai báo
+		item.innerHTML = `
+			
+			<span class="view-stats">👁️ ${l.views || 0} lượt xem</span>
+			<span class="lesson-name">${l.name}</span>
+			<span class="start-text"></span>
+    `;		
+            // 1. Lấy số lượt xem hiện có từ API để hiển thị
+			fetch(`https://countapi.xyz{namespace}/${lessonId}`)
+				.then(res => res.json())
+				.then(res => {
+					document.getElementById(`count-${lessonId}`).innerText = res.value || 0;
+				})
+				.catch(() => {}); // Nếu chưa có lượt xem nào thì mặc định là 0
+
+			// 2. Khi Click: Tăng lượt xem lên
+			item.onclick = () => {
+				fetch(`https://countapi.xyz{namespace}/${lessonId}`);
+    };
+
+	
         listContainer.appendChild(item);
     });
 </script>
