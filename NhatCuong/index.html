@@ -121,11 +121,11 @@
 
 
 
-		//var apiURL = "https://counterapi.dev" + namespace + "/" + lessonId;
-		var getUrl = "https://countapi.xyz" + namespace + "/" + lessonKey;
+		var apiURL = "https://counterapi.dev" + namespace + "/" + lessonId;
+		//var getUrl = "https://countapi.xyz" + namespace + "/" + lessonKey;
 
 		// Dùng link này để lấy số (chú ý dấu huyền ` ở hai đầu)
-		fetch(getUrl)
+		fetch(apiURL)
 			.then(function(res) { return res.json(); })
 			.then(function(data) {
 				var span = document.getElementById("count-" + lessonId);
@@ -137,8 +137,8 @@
 
 		// 2. Tăng số khi Click
 		item.onclick = function() {
-			var hitUrl = "https://countapi.xyz" + namespace + "/" + lessonKey;
-			fetch(hitUrl)
+			//var hitUrl = "https://countapi.xyz" + namespace + "/" + lessonKey;
+			fetch(apiURL+ "up")
 				.then(function(res) { return res.json(); })
 				.then(function(data) {
 					var span = document.getElementById("count-" + lessonId);
