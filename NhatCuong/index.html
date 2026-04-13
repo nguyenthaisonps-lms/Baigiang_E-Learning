@@ -116,7 +116,7 @@
 			<span class="view-stats">👁️ <span id="count-${lessonId}">0</span> lượt xem</span>
 			<span class="lesson-name">${l.name}</span>
 			<span class="start-text"></span>
-    `;		
+		`;		
             // 1. Lấy số lượt xem hiện có từ API để hiển thị
 			fetch(`https://countapi.it{namespace}/${lessonId}`)
 				.then(res => res.json())
@@ -135,11 +135,11 @@
 				fetch(`https://countapi.it{namespace}/${lessonId}`)
 				.then(res => res.json())
 				.then(res => {
-                const countView = document.getElementById(`count-${lessonId}`);
-                if(countView) countView.innerText = res.value;
-            });
-			
-    };
+					const countView = document.getElementById(`count-${lessonId}`);
+					if(countView) countView.innerText = res.value;
+				});
+			});
+    
 		
 		
 		listContainer.appendChild(item);
