@@ -94,10 +94,13 @@
 		{ name: 'Âm nhạc 3: Ôn bài "Tình bạn tuổi thơ"', url: "https://hoctructuyen.nguyenthaisonps.edu.vn/course/view.php?id=64" }
         ];
     const listContainer = document.getElementById('lesson-list');
-	const namespace = "nguyenthaison_school"; // Tên định danh cho trường bạn
-
-    lessons.forEach(l => {
-        const item = document.createElement('a');
+	//const namespace = "nguyenthaison_school"; // Tên định danh cho trường bạn
+	var namespace = "nguyenthaison_school";
+	
+    //lessons.forEach(l => {
+        //const item = document.createElement('a');
+	lessons.forEach(function(l) {
+		var item = document.createElement('a');
         item.href = l.url;
         item.className = 'lesson-item';
         // Mở bài giảng Moodle ở tab mới để không mất trang Netlify
@@ -106,39 +109,39 @@
         //item.innerText = l.name;
 		
 		// Tạo ID từ tên bài giảng (Xóa dấu, chuyển thành chữ thường để làm API ID)
-		const lessonId = l.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').toLowerCase().replace(/[^a-z0-9-]/g, '');
-	
-		// QUAN TRỌNG: Dùng innerHTML để chèn cấu trúc biểu tượng và lượt xem
-		// Bạn thay con số lượt xem thực tế vào chỗ "0" hoặc dùng l.views nếu đã khai báo
+		//const lessonId = l.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').toLowerCase().replace(/[^a-z0-9-]/g, '');
+		var lessonId = l.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').toLowerCase().replace(/[^a-z0-9-]/g, '');
+		
+		
 
-		item.innerHTML = `
+		item.innerHTML = 
+			'<span class="view-stats">👁️ <span id="count-' + lessonId + '">0</span> lượt xem</span>' +
+			'<span class="lesson-name">' + l.name + '</span>' +
+			'<span class="start-text"></span>';
 
-			<span class="view-stats">👁️ <span id="count-${lessonId}">0</span> lượt xem</span>
-			<span class="lesson-name">${l.name}</span>
-			<span class="start-text"></span>
-		`;		
-		const apiURL = `https://counterapi.dev{namespace}/${lessonId}`;
 
+
+		var apiURL = "https://counterapi.dev" + namespace + "/" + lessonId;
 
 		// Dùng link này để lấy số (chú ý dấu huyền ` ở hai đầu)
 		fetch(apiURL)
-			.then(res => res.json())
-			.then(data => {
-				const countSpan = document.getElementById(`count-${lessonId}`);
-				if (countSpan) countSpan.innerText = data.count || 0;
+			.then(function(res) { return res.json(); })
+			.then(function(data) {
+				var span = document.getElementById("count-" + lessonId);
+				if (span) span.innerText = data.count || 0;
 			})
-			.catch(() => console.log("Khởi tạo bài mới"));
+			.catch(function() { console.log("Khởi tạo bài mới"); });
 
 
 		// 2. Tăng số khi Click
-		item.addEventListener('click', function() {
-			fetch(`${apiURL}/up`)
-				.then(res => res.json())
-				.then(data => {
-					const countSpan = document.getElementById(`count-${lessonId}`);
-					if (countSpan) countSpan.innerText = data.count;
+		item.onclick = function() {
+			fetch(apiURL + "/up")
+				.then(function(res) { return res.json(); })
+				.then(function(data) {
+					var span = document.getElementById("count-" + lessonId);
+					if (span) span.innerText = data.count;
             });
-		});
+		};
     
 		
 		
