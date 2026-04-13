@@ -195,7 +195,13 @@
 
 			/* Tối ưu Mobile: Khi chạm tay vào */
 		@media (max-width: 480px) {
-    
+
+			/* 1. Sắp xếp lại Header để Logo không đè chữ */
+			.header-container { /* Thay bằng class bao quanh toàn bộ header của bạn */
+				display: flex;
+				flex-direction: column; /* Xếp chồng các thành phần theo hàng dọc */
+				align-items: center;
+			}    
 			.school-logo-left {
 				/* Quan trọng: Chuyển từ bay lơ lửng sang nằm bình thường */
 				position: static !important; 
@@ -221,6 +227,14 @@
 				line-height: 1.4;
 				text-align: center;
 				margin-top: 5px;
+			}
+			
+			.search-container input {
+				width: 100% !important;
+				font-size: 14px !important;
+				padding: 10px 15px !important;
+				height: auto !important;
+				border-radius: 25px !important;
 			}
 
 			.stat-box {
