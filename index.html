@@ -195,26 +195,41 @@
 
 			/* Tối ưu Mobile: Khi chạm tay vào */
 		@media (max-width: 480px) {
-			/* Thu nhỏ Logo để không đè lên chữ */
-		.school-logo-left { 
-			width: 80px !important; 
-			height: auto;
-			margin-bottom: 10px;
-		}
+    
+			.school-logo-left {
+				/* Quan trọng: Chuyển từ bay lơ lửng sang nằm bình thường */
+				position: static !important; 
+				transform: none !important;
+        
+				display: block !important;
+				margin: 10px auto !important; /* Căn giữa logo */
+				width: 100px !important;      /* Thu nhỏ lại cho vừa mắt */
+			}
 
-			/* Chỉnh lại tiêu đề trường */
-		.ten-truong {
-			font-size: 14px !important;
-			line-height: 1.4;
-		}
+			.slogan-container {
+				width: 95% !important;
+				margin: 0 auto 15px !important;
+				padding: 8px 5px !important;
+			}
 
-			/* Banner tổng số bài giảng */
-		.stat-box {
-			width: 90% !important;
-			padding: 10px !important;
-			font-size: 13px !important;
+			.slogan-container marquee {
+				font-size: 1.2rem !important; /* Giảm cỡ chữ chạy để không bị vỡ hàng */
+			}
+
+			.ten-truong {
+				font-size: 16px !important;
+				line-height: 1.4;
+				text-align: center;
+				margin-top: 5px;
+			}
+
+			.stat-box {
+				width: 90% !important;
+				margin: 10px auto !important;
+				font-size: 14px !important;
+				padding: 10px !important;
+			}
 		}
-	}
     </style>
 </head>
 <body>
