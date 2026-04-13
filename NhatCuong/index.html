@@ -139,7 +139,12 @@
 				.then(function(res) { return res.json(); })
 				.then(function(data) {
 					var span = document.getElementById("count-" + lessonId);
-					if (span) span.innerText = data.count;
+					if (span) {
+					span.innerText = data.count;
+				}
+			})
+			.catch(function(err) {
+				console.log("Lỗi khi tăng số: ", err);
             });
 		};
     
