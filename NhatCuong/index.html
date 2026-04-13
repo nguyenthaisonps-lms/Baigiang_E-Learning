@@ -109,10 +109,10 @@
         //item.innerText = l.name;
 		
 		// Tạo ID từ tên bài giảng (Xóa dấu, chuyển thành chữ thường để làm API ID)
-		//const lessonId = l.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').toLowerCase().replace(/[^a-z0-9-]/g, '');
+		
 		var lessonId = l.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').toLowerCase().replace(/[^a-z0-9-]/g, '');
-		
-		
+		var lessonKey = lessonId.replace(/[^a-zA-Z0-9]/g, "");
+		var namespace = "nguyenthaison2024";
 
 		item.innerHTML = 
 			'<span class="view-stats">👁️ <span id="count-' + lessonId + '">0</span> lượt xem</span>' +
@@ -122,30 +122,30 @@
 
 
 		//var apiURL = "https://counterapi.dev" + namespace + "/" + lessonId;
-		var apiURL = "https://counterapi.dev" + "/" + lessonId;
+		var getUrl = "https://countapi.xyz" + namespace + "/" + lessonKey;
 
 		// Dùng link này để lấy số (chú ý dấu huyền ` ở hai đầu)
-		fetch(apiURL)
+		fetch(getUrl)
 			.then(function(res) { return res.json(); })
 			.then(function(data) {
 				var span = document.getElementById("count-" + lessonId);
-				if (span) span.innerText = data.count || 0;
+				if (span) span.innerText = data.value || 0;
 			})
-			.catch(function() { console.log("Khởi tạo bài mới"); });
-
+			.catch(function() {
+				fetch("https://countapi.xyz" + namespace + "&key=" + lessonKey + "&value=0");
+			});
 
 		// 2. Tăng số khi Click
 		item.onclick = function() {
-
-			fetch(apiURL + "/up")
+			var hitUrl = "https://countapi.xyz" + namespace + "/" + lessonKey;
+			fetch(hitUrl)
 				.then(function(res) { return res.json(); })
 				.then(function(data) {
 					var span = document.getElementById("count-" + lessonId);
-					if (span)	span.innerText = data.count;
+					if (span) span.innerText = data.value;
 				});
 			
-			
-		};
+			};
     
 		
 		
