@@ -110,42 +110,42 @@
 	
 		// QUAN TRỌNG: Dùng innerHTML để chèn cấu trúc biểu tượng và lượt xem
 		// Bạn thay con số lượt xem thực tế vào chỗ "0" hoặc dùng l.views nếu đã khai báo
+
 		item.innerHTML = `
-			
-			<div class="view-box">
-				<span class="view-stats">👁️ <span id="count-${lessonId}">0</span> lượt xem</span>
-			</div>
-			
+
+			<span class="view-stats">👁️ <span id="count-${lessonId}">0</span> lượt xem</span>
 			<span class="lesson-name">${l.name}</span>
 			<span class="start-text"></span>
 		`;		
+
             // 1. Lấy số lượt xem hiện có từ API để hiển thị
 			
 			const counterKey = lessonId;
-			const apiURL = `https://counterapi.dev{counterKey}`;
+			const apiUrl = `https://counterapi.dev{counterKey}`;
 			
-			fetch(apiURL)
+			fetch(apiUrl)
 				.then(res => res.json())
 				.then(data => {
-					const display = document.getElementById(`count-${lessonId}`);
+					document.getElementById(`count-${lessonId}`).innerText = data.count || 0;
+					//const display = document.getElementById(`count-${lessonId}`);
 					// Nếu đã có dữ liệu thì hiện số, nếu chưa có (mới tinh) thì hiện 0
-					if (display) display.innerText = data.count || 0;
+					//if (display) display.innerText = data.count || 0;
 				})
 				.catch(() => {
 					// Nếu là bài giảng mới chưa có trên hệ thống thì mặc định là 0
-					document.getElementById(`count-${lessonId}`).innerText = 0;
-				
+					//document.getElementById(`count-${lessonId}`).innerText = 0;
+					fetch(apiUrl + '/set?count=0');
 				}); 
 
 			// 3. Khi học sinh Click: Tăng số lượt xem
-			item.onclick = (e) => {
-				fetch(`${apiURL}/up`)
-				.then(res => res.json())
-				.then(data => {
-					const display = document.getElementById(`count-${lessonId}`);
-					if (diaplay) display.innerText = data.count;
+			item.addEventListener('click', function() {
+				fetch(apiUrl + '/up')
+					.then(res => res.json())
+					.then(data => {
+						document.getElementById(`count-${lessonId}`).innerText = data.count;
+					//if (diaplay) display.innerText = data.count;
 				});
-			};
+			});
     
 		
 		
