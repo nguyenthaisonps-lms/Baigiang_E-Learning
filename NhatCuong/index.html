@@ -112,33 +112,38 @@
 		// Bạn thay con số lượt xem thực tế vào chỗ "0" hoặc dùng l.views nếu đã khai báo
 		item.innerHTML = `
 			
+			<div class="view-box">
+				<span class="view-stats">👁️ <span id="count-${lessonId}">0</span> lượt xem</span>
+			</div>
 			
-			<span class="view-stats">👁️ <span id="count-${lessonId}">0</span> lượt xem</span>
 			<span class="lesson-name">${l.name}</span>
 			<span class="start-text"></span>
 		`;		
             // 1. Lấy số lượt xem hiện có từ API để hiển thị
-			const apiURL = `https://counterapi.dev{lessonId}`;
+			
+			const counterKey = lessonId;
+			const apiURL = `https://counterapi.dev{counterKey}`;
 			
 			fetch(apiURL)
 				.then(res => res.json())
 				.then(data => {
-					const countElement = document.getElementById(`count-${lessonId}`);
+					const display = document.getElementById(`count-${lessonId}`);
 					// Nếu đã có dữ liệu thì hiện số, nếu chưa có (mới tinh) thì hiện 0
-					countElement.innerText = data.count || 0;
+					if (display) display.innerText = data.count || 0;
 				})
 				.catch(() => {
 					// Nếu là bài giảng mới chưa có trên hệ thống thì mặc định là 0
-					fetch(`${apiURL}/set?count=0`);
+					document.getElementById(`count-${lessonId}`).innerText = 0;
 				
 				}); 
 
 			// 3. Khi học sinh Click: Tăng số lượt xem
-			item.onclick = () => {
+			item.onclick = (e) => {
 				fetch(`${apiURL}/up`)
 				.then(res => res.json())
 				.then(data => {
-					document.getElementById(`count-${lessonId}`).innerText = data.count;
+					const display = document.getElementById(`count-${lessonId}`);
+					if (diaplay) display.innerText = data.count;
 				});
 			};
     
