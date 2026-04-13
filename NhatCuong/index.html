@@ -94,7 +94,7 @@
 		{ name: 'Âm nhạc 3: Ôn bài "Tình bạn tuổi thơ"', url: "https://hoctructuyen.nguyenthaisonps.edu.vn/course/view.php?id=64" }
         ];
     const listContainer = document.getElementById('lesson-list');
-	const namespace = "nguyenthaison_edu_vn"; // Tên định danh cho trường bạn
+	const namespace = "nguyenthaison_school"; // Tên định danh cho trường bạn
 
     lessons.forEach(l => {
         const item = document.createElement('a');
@@ -117,31 +117,26 @@
 			<span class="lesson-name">${l.name}</span>
 			<span class="start-text"></span>
 		`;		
+		const apiURL = `https://counterapi.dev{namespace}/${lessonId}`;
 
-		// 1. Hiển thị số lượt xem ban đầu
-		const lessonKey = lessonId.replace(/[^a-zA-Z0-9]/g, ""); // Làm sạch ID để tránh lỗi link
-		const namespace = "nguyenthaison_school";
-		const countElement = document.getElementById(`count-${lessonId}`);
 
 		// Dùng link này để lấy số (chú ý dấu huyền ` ở hai đầu)
-		fetch(`https://countapi.dev{namespace}/${lessonId}`)
+		fetch(apiURL)
 			.then(res => res.json())
 			.then(data => {
-				const display = document.getElementById(`count-${lessonId}`);
-				if (diaplay) diaplay.innerText = data.count || 0;
+				const countSpan = document.getElementById(`count-${lessonId}`);
+				if (countSpan) countSpan.innerText = data.count || 0;
 			})
-			.catch(() => {
-				// Nếu chưa có thì hiện số 0
-				console.log("Bài giảng mới đang khởi tạo...");
-			});
+			.catch(() => console.log("Khởi tạo bài mới"));
+
 
 		// 2. Tăng số khi Click
-		item.addEventListener('click', () => {
-			fetch(`https://counterapi.dev{namespace}/${lessonId}/up`)
+		item.addEventListener('click', function() {
+			fetch(`${apiURL}/up`)
 				.then(res => res.json())
 				.then(data => {
-					const display = document.getElementById(`count-${lessonId}`);
-					if (display) display.innerText = data.count;
+					const countSpan = document.getElementById(`count-${lessonId}`);
+					if (countSpan) countSpan.innerText = data.count;
             });
 		});
     
