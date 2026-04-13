@@ -118,27 +118,29 @@
 			<span class="start-text"></span>
 		`;		
             // 1. Lấy số lượt xem hiện có từ API để hiển thị
-			fetch(`https://countapi.it{namespace}/${lessonId}`)
+			const apiURL = `https://counterapi.dev{lessonId}`;
+			
+			fetch(apiURL)
 				.then(res => res.json())
-				.then(res => {
-					const countView = document.getElementById(`count-${lessonId}`);
-					if(countView) countView.innerText = res.value || 0;					
+				.then(data => {
+					const countElement = document.getElementById(`count-${lessonId}`);
+					// Nếu đã có dữ liệu thì hiện số, nếu chưa có (mới tinh) thì hiện 0
+					countElement.innerText = data.count || 0;
 				})
 				.catch(() => {
 					// Nếu là bài giảng mới chưa có trên hệ thống thì mặc định là 0
-					console.log("Đang khởi tạo lượt xem cho bài mới");
+					fetch(`${apiURL}/set?count=0`);
 				
 				}); 
 
-			// 3. Khi học sinh bấm vào bài giảng thì tăng số lượt xem lên
-			item.addEventListener('click', function() {
-				fetch(`https://countapi.it{namespace}/${lessonId}`)
+			// 3. Khi học sinh Click: Tăng số lượt xem
+			item.onclick = () => {
+				fetch(`${apiURL}/up`)
 				.then(res => res.json())
-				.then(res => {
-					const countView = document.getElementById(`count-${lessonId}`);
-					if(countView) countView.innerText = res.value;
+				.then(data => {
+					document.getElementById(`count-${lessonId}`).innerText = data.count;
 				});
-			});
+			};
     
 		
 		
