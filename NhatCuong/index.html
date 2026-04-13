@@ -121,21 +121,24 @@
 			fetch(`https://countapi.it{namespace}/${lessonId}`)
 				.then(res => res.json())
 				.then(res => {
-					document.getElementById(`count-${lessonId}`).innerText = res.value || 0;
+					const countView = document.getElementById(`count-${lessonId}`);
+					if(countView) countView.innerText = res.value || 0;					
 				})
 				.catch(() => {
-					// Nếu bài giảng mới hoàn toàn, ta tạo mới trên hệ thống
-				fetch(`https://countapi.it{namespace}&key=${lessonId}&value=0`);
+					// Nếu là bài giảng mới chưa có trên hệ thống thì mặc định là 0
+					console.log("Đang khởi tạo lượt xem cho bài mới");
 				
 				}); 
 
-			// 2. Khi Click: Tăng lượt xem lên
-			item.onclick = (e) => {
+			// 3. Khi học sinh bấm vào bài giảng thì tăng số lượt xem lên
+			item.addEventListener('click', function() {
 				fetch(`https://countapi.it{namespace}/${lessonId}`)
 				.then(res => res.json())
 				.then(res => {
-                document.getElementById(`count-${lessonId}`).innerText = res.value;
+                const countView = document.getElementById(`count-${lessonId}`);
+                if(countView) countView.innerText = res.value;
             });
+		});	
     };
 		
 		
