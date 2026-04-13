@@ -111,7 +111,7 @@
 		// Tạo ID từ tên bài giảng (Xóa dấu, chuyển thành chữ thường để làm API ID)
 		
 		var lessonId = l.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').toLowerCase().replace(/[^a-z0-9-]/g, '');
-		var lessonKey = lessonId.replace(/[^a-zA-Z0-9]/g, "");
+		var lessonKey = lessonId;
 		var namespace = "nguyenthaison2024";
 
 		item.innerHTML = 
@@ -121,40 +121,26 @@
 
 
 
-		var apiURL = "https://counterapi.dev/" + lessonId;
-		//var getUrl = "https://countapi.xyz" + namespace + "/" + lessonKey;
+		//var apiURL = "https://counterapi.dev/" + lessonId;
+		var getUrl = "https://api.countapi.xyz/get/" + namespace + "/" + lessonKey;
 
 		// Dùng link này để lấy số (chú ý dấu huyền ` ở hai đầu)
-		fetch(apiURL)
+		fetch(getUrl)
 			.then(res => res.json())
 			.then(data => {
 				var span = document.getElementById("count-" + lessonId);
 				if (span) span.innerText = data.value || 0;
 			})
 			.catch(err => {
-				console.error("API lỗi:", err);
+				console.error("Lỗi load view:", err);
 			});
 
 		// 2. Tăng số khi Click
-		item.onclick = function(e) {
-			e.preventDefault();
-			
-			fetch(apiURL+ "/up")
-				.then(res => res.json())
-				.then(data => {
-					var span = document.getElementById("count-" + lessonId);
-					if (span) span.innerText = data.value;
-					
-					
-				})
-				.catch(err => console.error(err))
-				.finally(() => {
-					window.open(l.url, "_blank"); // ✅ mở lại link
-				});	
-			
+		item.onclick = function() {
+			var hitUrl = "https://api.countapi.xyz/hit/" + namespace + "/" + lessonKey;
+			navigator.sendBeacon(hitUrl);
 			};
-    
-		
+			
 		
 		listContainer.appendChild(item);
     });
