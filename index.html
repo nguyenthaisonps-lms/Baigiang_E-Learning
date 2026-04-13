@@ -243,6 +243,20 @@
 				font-size: 14px !important;
 				padding: 10px !important;
 			}
+			
+			/* 3. Sửa ô Tìm kiếm: Bỏ margin âm và thu nhỏ */
+			.search-wrapper {
+				margin-top: 10px !important; /* Chuyển từ -20px thành 10px */
+				width: 100% !important;
+				text-align: center;
+			}
+
+			.search-wrapper input {
+				width: 90% !important; /* Thu nhỏ ô nhập lại 90% màn hình */
+				padding: 10px !important;
+				font-size: 14px !important;
+				border-radius: 20px !important;
+			}			
 		}
     </style>
 </head>
@@ -251,12 +265,13 @@
 <div class="container">
     <div class="header-relative">
         <!-- Logo nằm độc lập bên trái -->
-        <img src="images/logo_512.png" class="school-logo-left" onerror="this.style.display='none'">
+        <!--img src="images/logo_512.png" class="school-logo-left" onerror="this.style.display='none'"-->
 		
         <!-- Nội dung chữ -->
 		<div class="header-content-center">		
 			<div class="don-vi">ỦY BAN NHÂN DÂN PHƯỜNG XUÂN HÒA</div>
 			<div class="ten-truong">TRƯỜNG TIỂU HỌC NGUYỄN THÁI SƠN</div>
+        <img src="images/logo_512.png" class="school-logo-left" onerror="this.style.display='none'">			
 			<h1>HỆ THỐNG BÀI GIẢNG ĐIỆN TỬ</h1>
 	
 		</div>
