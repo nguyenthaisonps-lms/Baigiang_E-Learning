@@ -118,34 +118,30 @@
 			<span class="start-text"></span>
 		`;		
 
-            // 1. Lấy số lượt xem hiện có từ API để hiển thị
-			
-			const counterKey = lessonId;
-			const apiUrl = `https://counterapi.dev{counterKey}`;
-			
-			fetch(apiUrl)
-				.then(res => res.json())
-				.then(data => {
-					document.getElementById(`count-${lessonId}`).innerText = data.count || 0;
-					//const display = document.getElementById(`count-${lessonId}`);
-					// Nếu đã có dữ liệu thì hiện số, nếu chưa có (mới tinh) thì hiện 0
-					//if (display) display.innerText = data.count || 0;
-				})
-				.catch(() => {
-					// Nếu là bài giảng mới chưa có trên hệ thống thì mặc định là 0
-					//document.getElementById(`count-${lessonId}`).innerText = 0;
-					fetch(apiUrl + '/set?count=0');
-				}); 
+		// 1. Hiển thị số lượt xem ban đầu
+		const lessonKey = lessonId.replace(/[^a-zA-Z0-9]/g, ""); // Làm sạch ID để tránh lỗi link
+		const namespace = "nguyenthaison_school";
+		const countElement = document.getElementById(`count-${lessonId}`);
 
-			// 3. Khi học sinh Click: Tăng số lượt xem
-			item.addEventListener('click', function() {
-				fetch(apiUrl + '/up')
-					.then(res => res.json())
-					.then(data => {
-						document.getElementById(`count-${lessonId}`).innerText = data.count;
-					//if (diaplay) display.innerText = data.count;
-				});
+		// Dùng link này để lấy số (chú ý dấu huyền ` ở hai đầu)
+		fetch(`https://countapi.it{namespace}/${lessonKey}`)
+			.then(res => res.json())
+			.then(res => {
+				if (countElement) countElement.innerText = res.value || 0;
+			})
+			.catch(() => {
+				// Nếu chưa có thì hiện số 0
+				if (countElement) countElement.innerText = 0;
 			});
+
+		// 2. Tăng số khi Click
+		item.onclick = function(e) {
+			fetch(`https://countapi.it{namespace}/${lessonKey}`)
+				.then(res => res.json())
+				.then(res => {
+                if (countElement) countElement.innerText = res.value;
+            });
+		};
     
 		
 		
