@@ -192,6 +192,20 @@
 		.slogan-container marquee {
 			display: block;
 		}
+		
+		/* Định nghĩa hiệu ứng hiện lên từ từ */
+		@keyframes fadeIn {
+			from { opacity: 0; transform: translateY(-10px); }
+			to { opacity: 1; transform: translateY(0); }
+		}
+
+		#no-result {
+			/* Khi hiện lên sẽ chạy hiệu ứng fadeIn trong 0.5 giây */
+				animation: fadeIn 5s ease-out;
+		}
+		
+		
+		
 
 			/* Tối ưu Mobile: Khi chạm tay vào */
 		@media (max-width: 480px) {
@@ -223,10 +237,17 @@
 			}
 
 			.ten-truong {
-				font-size: 16px !important;
+				font-size: 13px !important;
 				line-height: 1.4;
 				text-align: center;
 				margin-top: 5px;
+			}
+			
+			.don-vi {
+				font-size: 20px !important;
+				line-height: 1.1;
+				text-align: center;
+				margin-top: -10px;
 			}
 			
 			.search-container input {
@@ -299,7 +320,11 @@
  
     <div id="teacher-list" class="grid-container"></div>
 	
-	
+	<!-- Thông báo sẽ ẩn đi lúc đầu (display: none) -->
+		<div id="no-result" style="display: none; text-align: center; padding: 20px; color: #ff4d4d; font-weight: bold; background: #fff; border-radius: 8px; margin-top: 20px;">
+			❌ Không tìm thấy tên giáo viên. Bạn vui lòng kiểm tra lỗi chính tả hoặc Giáo viên chưa có bài giảng trên hệ thống...
+		</div>
+		
 </div>
 
 <script>
@@ -373,9 +398,44 @@
 
     renderTeachers(danhSachGV);
 
-    document.getElementById('teacherSearch').addEventListener('input', (e) => {
-        const val = e.target.value.toLowerCase();
-        renderTeachers(danhSachGV.filter(g => g.name.toLowerCase().includes(val)));
+		<!-- document.getElementById('teacherSearch').addEventListener('input', (e) => { -->
+		<!--	const val = e.target.value.toLowerCase(); -->
+		<!--	renderTeachers(danhSachGV.filter(g => g.name.toLowerCase().includes(val))); -->
+		
+		<!-- document.getElementById('teacherSearch').addEventListener('input', (e) => { -->
+		document.getElementById('teacherSearch').addEventListener('keydown', (e) => {
+			// Chỉ chạy code khi phím nhấn xuống là phím Enter
+				if (e.key === 'Enter') {
+				const val = e.target.value.toLowerCase().trim();	
+			
+		// 1. Lọc danh sách giáo viên
+			const filteredList = danhSachGV.filter(g => g.name.toLowerCase().includes(val));
+		
+		// 2. Chạy hàm render với danh sách đã lọc
+			renderTeachers(filteredList);
+		
+		// 3. Xử lý hiển thị thông báo "Không tìm thấy"
+			const noResultMsg = document.getElementById('no-result');
+			if (filteredList.length === 0 && val !== "") {
+				noResultMsg.style.display = "block"; // Hiện thông báo nếu danh sách rỗng
+				
+				// Dòng này giúp hiệu ứng chạy lại từ đầu mỗi khi hiện thông báo
+				noResultMsg.style.animation = 'none';
+				noResultMsg.offsetHeight; /* trick để trình duyệt hiểu là cần reset animation */
+				noResultMsg.style.animation = 'fadeIn 5s ease-out';
+								
+			} else {
+				noResultMsg.style.display = "none";  // Ẩn đi nếu có kết quả
+			}
+		}
+		
+		// Tự động hiện lại danh sách khi người dùng xóa sạch ô tìm kiếm
+		document.getElementById('teacherSearch').addEventListener('input', (e) => {
+			if (e.target.value.trim() === "") {
+				renderTeachers(danhSachGV);
+				document.getElementById('no-result').style.display = "none";
+			}
+		});
     });
 </script>
 </body>

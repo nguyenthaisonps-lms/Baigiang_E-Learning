@@ -84,6 +84,10 @@
     <div id="lesson-list" class="lesson-grid">
         <!-- Bài giảng tự động hiện ở đây -->
     </div>
+	<!-- Nút Reset nằm ở đâu đó dễ thấy -->
+	<button id="btn-reset" style="display ; margin: 20px; padding: 10px; cursor: pointer; background: #ff4d4d; color: white; border: none; border-radius: 5px;">
+		🔄	Xóa hết lượt xem (Reset)
+	</button>
 </div>
 
 <script>
@@ -113,36 +117,36 @@
 		var lessonId = l.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').toLowerCase().replace(/[^a-z0-9-]/g, '');
 		var lessonKey = lessonId;
 		var namespace = "nguyenthaison2024";
-
-		item.innerHTML = 
-			'<span class="view-stats">👁️ <span id="count-' + lessonId + '">0</span> lượt xem</span>' +
-			'<span class="lesson-name">' + l.name + '</span>' +
-			'<span class="start-text"></span>';
-
-
-
-		var apiURL = "https://counterapi.it/" + namespace + "/" + lessonId;
-		//var getUrl = "https://api.countapi.xyz/get/" + namespace + "/" + lessonKey;
-
-		// Dùng link này để lấy số (chú ý dấu huyền ` ở hai đầu)
-		fetch(apiURL)
-			.then(res => res.json())
-			.then(data => {
-				var span = document.getElementById("count-" + lessonId);
-				if (span) span.innerText = data.value || 0;
-			})
-			.catch(function() { console.log("Bài mới"); });
-				
+		var savedCount = localStorage.getItem("count-" + lessonId) || 0;
+		item.innerHTML = ` 
+			<span class="view-stats">👁️ <span id="count-${lessonId}">${savedCount} lượt xem</span></span> 
+			<span class="lesson-name">${l.name}</span>
+			<span class="start-text"></span>
+		`;
 
 		// 2. Tăng số khi Click
 		item.onclick = function() {
-			fetch(apiURL + "/up")
-			.then(function(res) { return res.json(); })
-			.then(function(data) {
-				var span = document.getElementById("count-" + lessonId);
-				if (span) span.innerText = data.count;
-			});	
+			var currentCount = parseInt(localStorage.getItem("count-" + lessonId)) || 0;
+			var newCount = currentCount + 1 + " lượt xem";
+			
+			localStorage.setItem("count-" + lessonId, newCount);
+			
+			
+			var span = document.getElementById("count-" + lessonId);
+			if (span) span.innerText = newCount;
+				
+				
+			console.log("Đã tăng lượt xem cho: " + lessonId);
+			
 		};
+		
+	// Tìm cái nút có ID là 'btn-reset' và bắt nó làm việc
+		document.getElementById('btn-reset').onclick = function() {
+			if (confirm("Bạn có muốn xóa sạch lịch sử lượt xem để test lại không?")) {
+				localStorage.clear(); // Xóa sạch bộ nhớ máy
+				location.reload();    // Tải lại trang để số về 0
+			}
+		};	
 			
 			listContainer.appendChild(item);
 				

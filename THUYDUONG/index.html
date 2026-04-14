@@ -39,7 +39,7 @@
 			background: #f1f2f6;
 			padding: 3px 12px;
 			border-radius: 10px;
-			margin-right: 20px; /* Khoảng cách với tên bài giảng */
+			margin-right: 10px; /* Khoảng cách với tên bài giảng */
 			margin-left: 10px;  /* Khoảng cách với icon cuốn sách */
 			font-weight: normal;
 			min-width: 80px;
@@ -70,6 +70,7 @@
 			}
 		}
 		
+		
     </style>
 </head>
 <body>
@@ -83,6 +84,10 @@
     <div id="lesson-list" class="lesson-grid">
         <!-- Bài giảng tự động hiện ở đây -->
     </div>
+	<!-- Nút Reset nằm ở đâu đó dễ thấy -->
+	<button id="btn-reset" style="display ; margin: 20px; padding: 10px; cursor: pointer; background: #ff4d4d; color: white; border: none; border-radius: 5px;">
+		🔄	Xóa hết lượt xem (Reset)
+	</button>	
 </div>
 
 <script>
@@ -95,45 +100,56 @@
 		{ name: "Tiếng Việt 3 - Viết sáng tạo: Tả một đồ dùng khi đi tham quan, du lịch", url: "https://hoctructuyen.nguyenthaisonps.edu.vn/course/view.php?id=64" }
         ];
     const listContainer = document.getElementById('lesson-list');
-	const namespace = "nguyenthaison_edu_vn"; // Tên định danh cho trường bạn
+	var namespace = "nguyenthaison_school"; // Tên định danh cho trường bạn
 	
 
     lessons.forEach(l => {
-        const item = document.createElement('a');
+		var item = document.createElement('a');
         item.href = l.url;
         item.className = 'lesson-item';
         // Mở bài giảng Moodle ở tab mới để không mất trang Netlify
-        item.target = "_blank"; 
+        item.target = "_blank";
 		
         //item.innerText = l.name;
 		
 		// Tạo ID từ tên bài giảng (Xóa dấu, chuyển thành chữ thường để làm API ID)
-		const lessonId = encodeURIComponent(l.name.replace(/\s+/g, '-').toLowerCase());
-	
-		// QUAN TRỌNG: Dùng innerHTML để chèn cấu trúc biểu tượng và lượt xem
-		// Bạn thay con số lượt xem thực tế vào chỗ "0" hoặc dùng l.views nếu đã khai báo
-		item.innerHTML = `
-			
-			<span class="view-stats">👁️ ${l.views || 0} lượt xem</span>
+		
+		var lessonId = l.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').toLowerCase().replace(/[^a-z0-9-]/g, '');
+		var lessonKey = lessonId;
+		var namespace = "nguyenthaison2024";
+		var savedCount = localStorage.getItem("count-" + lessonId) || 0;
+		item.innerHTML = ` 
+			<span class="view-stats">👁️ <span id="count-${lessonId}">${savedCount} lượt xem</span></span> 
 			<span class="lesson-name">${l.name}</span>
 			<span class="start-text"></span>
-    `;		
-            // 1. Lấy số lượt xem hiện có từ API để hiển thị
-			fetch(`https://countapi.xyz{namespace}/${lessonId}`)
-				.then(res => res.json())
-				.then(res => {
-					document.getElementById(`count-${lessonId}`).innerText = res.value || 0;
-				})
-				.catch(() => {}); // Nếu chưa có lượt xem nào thì mặc định là 0
+		`;
 
-			// 2. Khi Click: Tăng lượt xem lên
-			item.onclick = () => {
-				fetch(`https://countapi.xyz{namespace}/${lessonId}`);
-    };
-
-	
+		// 2. Tăng số khi Click
+		item.onclick = function() {
+			var currentCount = parseInt(localStorage.getItem("count-" + lessonId)) || 0;
+			var newCount = currentCount + 1 + " lượt xem";
+			
+			localStorage.setItem("count-" + lessonId, newCount);
+			
+			
+			var span = document.getElementById("count-" + lessonId);
+			if (span) span.innerText = newCount;
+				
+				
+			console.log("Đã tăng lượt xem cho: " + lessonId);
+			
+		};
 		
-        listContainer.appendChild(item);
+	// Tìm cái nút có ID là 'btn-reset' và bắt nó làm việc
+		document.getElementById('btn-reset').onclick = function() {
+			if (confirm("Bạn có muốn xóa sạch lịch sử lượt xem để test lại không?")) {
+				localStorage.clear(); // Xóa sạch bộ nhớ máy
+				location.reload();    // Tải lại trang để số về 0
+			}
+		};	
+			
+			listContainer.appendChild(item);
+				
     });
 </script>
 
