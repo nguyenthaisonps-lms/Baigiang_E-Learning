@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bài Giảng Điện Tử</title>
-		
+
+		<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>		
 		
     <style>
         :root { --primary: #004a99; --bg: #f4f7f6; }
@@ -98,8 +100,12 @@
         { name: "Anh văn 4 - Unit 6: Describing People - Art", url: "https://hoctructuyen.nguyenthaisonps.edu.vn/course/view.php?id=87" }
         ];
     
-
-
+		//	Cấu hình Firebase
+		const firebaseConfig = {
+			databaseURL: "https://nts-baigiang-e-learning-default-rtdb.asia-southeast1.firebasedatabase.app"
+		};
+		if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+		const db = firebase.database();
 		// mới thêm
 		
     const listContainer = document.getElementById('lesson-list');
@@ -130,21 +136,31 @@
 		`;
 
 		// 2. Tăng số khi Click
-		item.onclick = function() {
-			var currentCount = parseInt(localStorage.getItem("count-" + lessonId)) || 0;
-			var newCount = currentCount + 1 ;
+		//item.onclick = function() {
+			//var currentCount = parseInt(localStorage.getItem("count-" + lessonId)) || 0;
+			//var newCount = currentCount + 1 ;
 			
-			localStorage.setItem("count-" + lessonId, newCount);
+			//localStorage.setItem("count-" + lessonId, newCount);
 			
 			
-			var span = document.getElementById("count-" + lessonId);
-			if (span) span.innerText = newCount;
+			//var span = document.getElementById("count-" + lessonId);
+			//if (span) span.innerText = newCount;
 				
 				
-			console.log("Đã tăng lượt xem cho: " + lessonId);
+			//console.log("Đã tăng lượt xem cho: " + lessonId);
 			
-		};
-		
+		//};
+		// 2. Lắng nghe Firebase (Máy nào tăng số là máy mình hiện theo ngay)
+			const countRef = db.ref("counts/" + lessonId);
+			countRef.on('value', (snapshot) => {
+				const val = snapshot.val() || 0;
+				const span = document.getElementById(`count-${lessonId}`);
+				if (span) span.innerText = val;
+			});
+		// 3. Tăng số khi Click (Đẩy lên Google)
+			item.onclick = function() {
+				countRef.transaction((current) => (current || 0) + 1);
+			};
 	
 			listContainer.appendChild(item);
 				
