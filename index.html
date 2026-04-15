@@ -193,6 +193,10 @@
 			display: block;
 		}
 		
+		.mobile-break {
+			display: none;
+		}	
+		
 		/* Định nghĩa hiệu ứng hiện lên từ từ */
 		@keyframes fadeIn {
 			from { opacity: 0; transform: translateY(-10px); }
@@ -249,11 +253,21 @@
 				text-align: center;
 				margin-top: -5px;
 			}
+
+			.mobile-break {
+				display: block; /* Kích hoạt lệnh xuống dòng */
+				content: "";    /* Đảm bảo nó chiếm chỗ để đẩy chữ xuống */
+				margin-top: 5px; /* Khoảng cách giữa 2 dòng cho đẹp */
+			}			
 			
-			.h1 {
-				font-size: 10px !important;
-				line-height: 1.1;
-				text-align: center;
+			h1 {
+				font-size: 28px !important;
+				line-height: 1.4 !important;
+				text-align: center !important;
+				max-width: none; !important;
+				margin: 5px auto !important; /* Căn giữa cái khung h1 */
+				display: block !important;
+				white-space: normal !important; /* Cho phép rớt dòng */
 			}	
 		
 			.search-container input {
@@ -299,7 +313,7 @@
 			<div class="don-vi">ỦY BAN NHÂN DÂN PHƯỜNG XUÂN HÒA</div>
 			<div class="ten-truong">TRƯỜNG TIỂU HỌC NGUYỄN THÁI SƠN</div>
         <img src="images/logo_512.png" class="school-logo-left" onerror="this.style.display='none'">			
-			<h1>HỆ THỐNG BÀI GIẢNG ĐIỆN TỬ</h1>
+			<h1>HỆ THỐNG <br class="mobile-break"> BÀI GIẢNG ĐIỆN TỬ</h1>
 	
 		</div>
 	</div>

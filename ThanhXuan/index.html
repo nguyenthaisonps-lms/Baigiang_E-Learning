@@ -89,9 +89,15 @@
         <!-- Bài giảng tự động hiện ở đây -->
     </div>
 	<!-- Nút Reset nằm ở đâu đó dễ thấy -->
-	<button id="btn-reset" style="display ; margin: 20px; padding: 10px; cursor: pointer; background: #ff4d4d; color: white; border: none; border-radius: 5px;">
-		🔄	Xóa hết lượt xem (Reset)
+	<!-- <button id="btn-reset" style="display ; margin: 20px; padding: 10px; cursor: pointer; background: #ff4d4d; color: white; border: none; border-radius: 5px;"> -->
+		<!-- 🔄	Xóa hết lượt xem (Reset) -->
+	<!-- </button> -->
+
+	<!-- <button onclick="resetCounts()" style="background-color: red; color: white;"> -->
+	<button onclick="resetCounts()" style="display ; margin: 20px; padding: 10px; cursor: pointer; background: #ff4d4d; color: white; border: none; border-radius: 5px;">
+		🔄 Reset toàn bộ lượt xem trên hệ thống
 	</button>	
+	
 </div>
 
 <script>
@@ -167,12 +173,48 @@
     });
 	
 		// Tìm cái nút có ID là 'btn-reset' và bắt nó làm việc
-		document.getElementById('btn-reset').onclick = function() {
-			if (confirm("Bạn có muốn xóa sạch lịch sử lượt xem để test lại không?")) {
-				localStorage.clear(); // Xóa sạch bộ nhớ máy
-				location.reload();    // Tải lại trang để số về 0
+		const btnReset = document.getElementById('btn-reset');
+		if (btnReset) {
+				btnReset.onclick = function() {
+				if (confirm("Xóa sạch lượt xem trên toàn hệ thống?")) {
+					db.ref("counts").remove();
+					location.reload();
+				}		
+			};	
+		}
+
+		// Hàm xử lý Reset có bảo mật
+		function resetCounts() {
+			// 1. Đặt mật khẩu của Sơn ở đây (Ví dụ: 1234)
+			const securePass = "1234"; 
+    
+			// 2. Hiện bảng yêu cầu nhập mã
+			let userInput = prompt("Vui lòng nhập mật mã để Reset toàn bộ lượt xem:");
+
+			// 3. Kiểm tra mã nhập vào
+			if (userInput === null) {
+				// Người dùng bấm "Hủy" (Cancel)
+				return; 
 			}
-		};	
+
+			if (userInput === securePass) {
+				// Nếu đúng mật mã -> Tiến hành xóa trên Firebase
+				firebase.database().ref('counts').remove()
+					.then(() => {
+						alert("Đã xóa sạch lượt xem thành công!");
+						location.reload(); // Load lại trang để cập nhật số 0
+					})
+					.catch((error) => {
+						console.error("Lỗi khi xóa:", error);
+						alert("Có lỗi xảy ra, Sơn kiểm tra lại console nhé.");
+					});
+			} else {
+				// Nếu sai mật mã
+				alert("Sai mật mã! Không Reset được.");
+			}
+		}
+
+
 		
 </script>
 
