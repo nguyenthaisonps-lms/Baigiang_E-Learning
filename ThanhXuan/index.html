@@ -231,35 +231,56 @@
     
 			
 				// 2. Lấy cái thanh tiến trình ra để chạy
-				//const pContainer = item.getElementsByClassName('progress-container')[0];
-				//const pBar = item.getElementsByClassName('progress-bar')[0];
-			        
+						//const pContainer = item.getElementsByClassName('progress-container')[0];
+						//const pBar = item.getElementsByClassName('progress-bar')[0];
+			        var win = window.open(this.href, '_blank');
 					const pContainer = this.querySelector('.progress-container');
 					const pBar = this.querySelector('.progress-bar');
 	
     
-				if (pContainer && pBar) {
-					pContainer.style.display = 'block'; // Hiện thanh lên
-					let seconds = 0;
-					const target = 10;
+					if (pContainer && pBar) {
+						// Reset lại thanh về màu xanh mặc định mỗi khi bấm mới
+						pBar.style.backgroundColor = '#2ecc71';
+						pContainer.style.display = 'block'; // Hiện thanh lên
+						let seconds = 0;
+						const target = 10;
         
-					const timer = setInterval(() => {
-						seconds++;
-						pBar.style.width = (seconds / target * 100) + '%';
+						const timer = setInterval(() => {
+							// KIỂM TRA: Nếu Tab bài giảng (win) bị đóng, thì dừng đếm ngay
+							if (win.closed) {
+								clearInterval(timer);
+								
+								// Chuyển thanh sang màu đỏ (màu của lỗi/dừng lại)
+								pBar.style.backgroundColor = '#ff4757'; 
+								console.log("Đã đóng tab, dừng tính lượt xem.");
+					
+								// Đợi 1.5 giây cho người dùng thấy màu đỏ rồi mới ẩn thanh đi
+								setTimeout(() => {
+									pContainer.style.display = 'none';
+									pBar.style.width = '0%';
+								}, 1500);
+								
+								console.log("Sơn ơi, người dùng đóng tab sớm quá nên không tăng view nhé!");
+								return; // Thoát hàm, không chạy xuống lệnh tăng số bên dưới
+							}
+					
+							seconds++;
+							pBar.style.width = (seconds / target * 100) + '%';
 						
-						if (seconds >= target) {
-							clearInterval(timer);
+							if (seconds >= target) {
+								clearInterval(timer);
                 
-							// 3. Đủ 30 giây mới cộng số lên Firebase
-							//db.ref("counts/" + lessonId).transaction(c => (c || 0) + 1);
-							countRef.transaction(c => (c || 0) + 1);
-							pContainer.style.display = 'none'; // Xong thì ẩn đi
-						}
-					}, 1000); // 1000ms = 1 giây chạy 1 lần
-				} 
+								// 3. Đủ 30 giây mới cộng số lên Firebase
+								//db.ref("counts/" + lessonId).transaction(c => (c || 0) + 1);
+									countRef.transaction(c => (c || 0) + 1);
+									setTimeout(() => { pContainer.style.display = 'none'; }, 500);
+									// pContainer.style.display = 'none'; // Xong thì ẩn đi
+							}
+						}, 1000); // 1000ms = 1 giây chạy 1 lần
+					} 
 					// Vẫn cho phép mở tab mới bình thường nhưng code phía trên vẫn chạy ngầm
 					
-		};	
+				};	
 	
 	
 	
