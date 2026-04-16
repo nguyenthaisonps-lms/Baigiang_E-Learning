@@ -249,7 +249,7 @@
 							clearInterval(timer);
                 
 							// 3. Đủ 30 giây mới cộng số lên Firebase
-							//db.ref("counts/" + lessonId).transaction(c => (c || 0) + 1);
+							db.ref("counts/" + lessonId).transaction(c => (c || 0) + 1);
 							countRef.transaction(c => (c || 0) + 1);
 							pContainer.style.display = 'none'; // Xong thì ẩn đi
 						}
