@@ -213,11 +213,11 @@
 
 				// 1. Mở bài giảng ngay
 				const lessonUrl = this.href; 
-				const lessonId = l.id;
+				//const lessonId = l.id;
 				const countRef = db.ref("counts/" + lessonId); // Đảm bảo có đường dẫn tới đúng bài này
 
 		// 2. Lắng nghe Firebase (Máy nào tăng số là máy mình hiện theo ngay)
-			const countRef = db.ref("counts/" + lessonId);
+			//const countRef = db.ref("counts/" + lessonId);
 			countRef.on('value', (snapshot) => {
 				const val = snapshot.val() || 0;
 				const span = document.getElementById(`count-${lessonId}`);
