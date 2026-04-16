@@ -65,13 +65,77 @@
 			color: white;              /* Chữ sang màu trắng */
 			box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 		}
+		
+		/* Thanh tiến trình chạy ngầm */
+		.progress-container {
+			width: 100%;
+			height: 4px;
+			background-color: #f1f2f6;
+			border-radius: 2px;
+			margin-top: 5px;
+			display: none; /* Mặc định ẩn */
+		}
+
+		.progress-bar {
+			width: 0%;
+			height: 100%;
+			background-color: #2ecc71; /* Màu xanh lá cây */
+			border-radius: 2px;
+			transition: width 1s linear;
+		}		
+		
 
 		/* Tối ưu Mobile: Khi chạm tay vào */
 		@media (max-width: 768px) {
-			.lesson-item:active .view-stats {
-			background-color: #007bff;
-			color: white;
+			/* Khối bao quanh mỗi bài giảng */
+			.lesson-item {
+				display: flex;
+				align-items: center; /* Căn giữa các thành phần theo chiều dọc */
+				padding: 10px !important;
+				gap: 8px; /* Tạo khoảng cách nhỏ giữa các thành phần */
 			}
+			.mobile-break {
+				display: block; /* Kích hoạt lệnh xuống dòng */
+				content: "";    /* Đảm bảo nó chiếm chỗ để đẩy chữ xuống */
+				margin-top: 5px; /* Khoảng cách giữa 2 dòng cho đẹp */
+			}			
+			
+			
+			/* Phần số lượt xem */
+			.view-stats {
+				display: inline-block;
+				margin-right: ; /* Khoảng cách với tên bài giảng */
+				margin-left: -10px;  /* Khoảng cách với icon cuốn sách */
+			
+				text-align: center;      /* Căn giữa số và chữ trong khung */
+				line-height: 1.1;        /* Khoảng cách 2 dòng sát nhau cho gọn */
+				font-size: 0.7rem;
+				padding: 4px 6px;
+				background: #f1f2f6;
+				border-radius: 8px;
+				min-width: 45px;         /* Độ rộng vừa đủ để không chiếm chỗ */
+				color: #636e72;
+			}
+			/* Tên bài giảng */
+			.lesson-name {
+
+
+				text-align: center;      /* Căn giữa tên bài giảng */
+				font-size: 0.9rem;
+				color: #2d3436;
+
+			}
+			
+			/* Chữ "Bắt đầu học" */
+			.start-text {
+
+				color: #007bff; /* Đổi thành màu xanh cho chuyên nghiệp hơn màu vàng */
+				font-size: 0.8rem;
+				white-space: nowrap;
+				text-align: right;
+				min-width: fit-content;
+			}			
+			
 		}
 
 		
@@ -136,26 +200,17 @@
 		var namespace = "nguyenthaison2024";
 		var savedCount = localStorage.getItem("count-" + lessonId) || 0;
 		item.innerHTML = ` 
-			<span class="view-stats">👁️ <span id="count-${lessonId}">${savedCount} </span> lượt xem </span> 
+        
+			<span class="view-stats">👁️ <span id="count-${lessonId}">0 </span> <br class="mobile-break"> lượt xem </span> 
 			<span class="lesson-name">${l.name}</span>
 			<span class="start-text"></span>
+		    
+		    <!-- THÊM ĐOẠN NÀY VÀO DƯỚI CÙNG CỦA LESSON-ITEM -->
+			<div class="progress-container" style="display: none; width: 100%; height: 8px; background: #eee; border-radius: 2px; margin-top: 8px;">
+				<div class="progress-bar" style="width: 0%; height: 100%; background: #2ecc71; transition: width 1s linear; border-radius: 2px;"></div>
+			</div>
 		`;
 
-		// 2. Tăng số khi Click
-		//item.onclick = function() {
-			//var currentCount = parseInt(localStorage.getItem("count-" + lessonId)) || 0;
-			//var newCount = currentCount + 1 ;
-			
-			//localStorage.setItem("count-" + lessonId, newCount);
-			
-			
-			//var span = document.getElementById("count-" + lessonId);
-			//if (span) span.innerText = newCount;
-				
-				
-			//console.log("Đã tăng lượt xem cho: " + lessonId);
-			
-		//};
 		// 2. Lắng nghe Firebase (Máy nào tăng số là máy mình hiện theo ngay)
 			const countRef = db.ref("counts/" + lessonId);
 			countRef.on('value', (snapshot) => {
@@ -164,9 +219,49 @@
 				if (span) span.innerText = val;
 			});
 		// 3. Tăng số khi Click (Đẩy lên Google)
-			item.onclick = function() {
-				countRef.transaction((current) => (current || 0) + 1);
-			};
+			item.onclick = function(e) {
+				//countRef.transaction((current) => (current || 0) + 1);
+			//};
+    
+				// 1. Mở bài giảng ngay
+				const lessonUrl = this.href; 
+				const lessonId = l.id;
+				const countRef = db.ref("counts/" + lessonId); // Đảm bảo có đường dẫn tới đúng bài này
+				
+				// 2. Lấy cái thanh tiến trình ra để chạy
+				//const pContainer = item.getElementsByClassName('progress-container')[0];
+				//const pBar = item.getElementsByClassName('progress-bar')[0];
+			        
+					const pContainer = this.querySelector('.progress-container');
+					const pBar = this.querySelector('.progress-bar');
+	
+    
+				if (pContainer && pBar) {
+					pContainer.style.display = 'block'; // Hiện thanh lên
+					let seconds = 0;
+					const target = 30;
+        
+					const timer = setInterval(() => {
+						seconds++;
+						pBar.style.width = (seconds / target * 100) + '%';
+						
+						if (seconds >= target) {
+							clearInterval(timer);
+                
+							// 3. Đủ 30 giây mới cộng số lên Firebase
+							//db.ref("counts/" + lessonId).transaction(c => (c || 0) + 1);
+							countRef.transaction(c => (c || 0) + 1);
+							pContainer.style.display = 'none'; // Xong thì ẩn đi
+						}
+					}, 1000); // 1000ms = 1 giây chạy 1 lần
+				} 
+					// Vẫn cho phép mở tab mới bình thường nhưng code phía trên vẫn chạy ngầm
+					
+		};	
+	
+	
+	
+	
 	
 			listContainer.appendChild(item);
 				
