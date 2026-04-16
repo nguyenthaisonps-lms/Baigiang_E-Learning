@@ -211,6 +211,11 @@
 			</div>
 		`;
 
+				// 1. Mở bài giảng ngay
+				const lessonUrl = this.href; 
+				const lessonId = l.id;
+				const countRef = db.ref("counts/" + lessonId); // Đảm bảo có đường dẫn tới đúng bài này
+
 		// 2. Lắng nghe Firebase (Máy nào tăng số là máy mình hiện theo ngay)
 			const countRef = db.ref("counts/" + lessonId);
 			countRef.on('value', (snapshot) => {
@@ -218,16 +223,13 @@
 				const span = document.getElementById(`count-${lessonId}`);
 				if (span) span.innerText = val;
 			});
+
 		// 3. Tăng số khi Click (Đẩy lên Google)
 			item.onclick = function(e) {
 				//countRef.transaction((current) => (current || 0) + 1);
 			//};
     
-				// 1. Mở bài giảng ngay
-				const lessonUrl = this.href; 
-				const lessonId = l.id;
-				const countRef = db.ref("counts/" + lessonId); // Đảm bảo có đường dẫn tới đúng bài này
-				
+			
 				// 2. Lấy cái thanh tiến trình ra để chạy
 				//const pContainer = item.getElementsByClassName('progress-container')[0];
 				//const pBar = item.getElementsByClassName('progress-bar')[0];
@@ -239,7 +241,7 @@
 				if (pContainer && pBar) {
 					pContainer.style.display = 'block'; // Hiện thanh lên
 					let seconds = 0;
-					const target = 30;
+					const target = 10;
         
 					const timer = setInterval(() => {
 						seconds++;
@@ -249,7 +251,7 @@
 							clearInterval(timer);
                 
 							// 3. Đủ 30 giây mới cộng số lên Firebase
-							db.ref("counts/" + lessonId).transaction(c => (c || 0) + 1);
+							//db.ref("counts/" + lessonId).transaction(c => (c || 0) + 1);
 							countRef.transaction(c => (c || 0) + 1);
 							pContainer.style.display = 'none'; // Xong thì ẩn đi
 						}
