@@ -250,6 +250,7 @@
 								return;
 							}	
 							
+							
 							if (sec >= target) {
 								clearInterval(timer);
 								db.ref("counts/" + l.id).transaction(c => (c || 0) + 1);
