@@ -24,8 +24,7 @@
         .lesson-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
 
         .lesson-item { 
-            position: relative !important;
-			display: flex !important; align-items: center; justify-content: space-between;
+            display: flex; align-items: center; justify-content: space-between;
             padding: 20px; background: #fff; border: 1px solid #eee; border-radius: 12px;
             text-decoration: none; color: #2d3436; font-weight: 600; transition: 0.3s;
         }
@@ -85,96 +84,6 @@
 			transition: width 1s linear;
 		}		
 		
-		/* 2. Cố định vị trí cụm icon i */
-		.info-wrapper {
-			position: static; /* Để nó không làm rối hàng */
-			margin-left: 10px;
-			display: inline-block;
-		}
-
-
-
-		/* Khung bọc nút Info */
-		.info-wrapper:hover .lesson-popup {
-			visibility: visible !important;
-			opacity: 1 !important;
-			position: relative;
-			display: inline-block;
-			margin-left: 8px;
-			cursor: pointer;
-			bottom: 110%; /* Nhảy lên một chút khi hiện */
-		}
-
-		.info-icon {
-			font-style: normal;
-			background: #eee;
-			border-radius: 50%;
-			width: 18px;
-			height: 18px;
-			display: inline-flex;
-			align-items: center;
-			justify-content: center;
-			font-size: 12px;
-			color: #666;
-		}
-
-		/* Nội dung Popup */
-		.lesson-popup {
-			/* 1. CHỈNH CHIỀU RỘNG */
-			width: 280px;           /* Tăng/giảm con số này để khung rộng ra hoặc thu hẹp lại */
-			min-width: 200px;       /* Chiều rộng tối thiểu */
-			max-width: 90vw;        /* Đảm bảo trên điện thoại không bị tràn màn hình (90% chiều rộng màn hình) */
-
-			/* 2. CHỈNH CHIỀU CAO (Nếu nội dung quá dài) */
-			max-height: 200px;      /* Giới hạn chiều cao tối đa */
-			overflow-y: auto;        /*Nếu nội dung dài quá 200px sẽ tự hiện thanh cuộn bên trong popup */
-
-			/* 3. KHOẢNG CÁCH CHỮ VỚI MÉP KHUNG */
-			padding: 12px 15px;     
-    
-			/* 4. CHỈNH CỠ CHỮ TRONG POPUP */
-			font-size: 14px;
-			line-height: 1.5;       /* Khoảng cách giữa các dòng cho dễ đọc */
-    
-			/* Giữ nguyên các phần khác bạn đã làm... */
-			visibility: hidden !important;
-			opacity: 0 !important;
-			position: absolute !important;
-			bottom: 100%; 
-			left: 50%;
-			transform: translateX(-50%);
-			background: white;
-			border: 2px solid #3498db; /* Làm viền đậm hơn tí cho xịn */
-			border-radius: 10px;
-			box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-			z-index: 9999 !important;
-			pointer-events: none; /* Tránh việc popup đè lên làm khó bấm */
-			height: auto;
-			transition: all 0.2s ease-in-out;
-		}
-		
-		.info-icon {
-			display: inline-flex;
-			align-items: center;
-			justify-content: center;
-			width: 24px;            /* Tăng kích thước lớn hơn */
-			height: 24px;           /* Tăng kích thước lớn hơn */
-			background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); /* Màu Gradient cực ngầu */
-			color: white;
-			border-radius: 50%;     /* Hình tròn hoàn hảo */
-			font-family: 'Georgia', serif; /* Kiểu chữ i có chân nhìn sang hơn */
-			font-style: italic;
-			font-weight: bold;
-			font-size: 16px;        /* Chữ i to rõ */
-			box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-			cursor: pointer;
-			transition: transform 0.2s ease;
-		}
-
-		.info-icon:hover {
-			transform: scale(1.2); /* Rê chuột vào icon nó to lên một chút */
-		}		
-		
 
 		/* Tối ưu Mobile: Khi chạm tay vào */
 		@media (max-width: 768px) {
@@ -227,20 +136,17 @@
 				min-width: fit-content;
 			}
 			
-			/* Hiệu ứng Rê chuột trên PC */
-			@media (min-width: 1025px) {
-				.info-wrapper:hover .lesson-popup {
-					visibility: visible;
-					opacity: 1;
-				}
+			.lesson-desc {
+				display: -webkit-box;
+				-webkit-line-clamp: 1; /* Giới hạn chỉ hiện 1 dòng trên mobile */
+				-webkit-box-orient: vertical;
+				overflow: hidden;
+				font-size: 11px !important; /* Chữ nhỏ hơn một chút cho thanh thoát */
+				line-height: 1.2;
 			}
-
-			/* Hiệu ứng khi Bấm trên Mobile (Dùng class active khi click) */
-			@media (max-width: 1024px) {
-				.info-wrapper:active .lesson-popup {
-				visibility: visible;
-				opacity: 1;
-				}
+    
+			.lesson-item {
+				padding: 15px 10px !important; /* Tăng khoảng cách bấm cho ngón tay */
 			}
 			
 			
@@ -303,26 +209,22 @@
 		
 		// Tạo ID từ tên bài giảng (Xóa dấu, chuyển thành chữ thường để làm API ID)
 		
-			var lessonId = l.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').toLowerCase().replace(/[^a-z0-9-]/g, '');
-			var lessonKey = lessonId;
-			var namespace = "nguyenthaison2024";
-			var savedCount = localStorage.getItem("count-" + lessonId) || 0;
+		var lessonId = l.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').toLowerCase().replace(/[^a-z0-9-]/g, '');
+		var lessonKey = lessonId;
+		var namespace = "nguyenthaison2024";
+		var savedCount = localStorage.getItem("count-" + lessonId) || 0;
 		item.innerHTML = ` 
         
 			<span class="view-stats">👁️ <span id="count-${lessonId}">0 </span> <br class="mobile-break"> lượt xem </span> 
-				
-			<span class="lesson-name">${l.name}
-			        <!-- NÚT INFO: Trên PC rê chuột vào là hiện, trên Mobile bấm vào là hiện -->
-						<span class="info-wrapper" onclick="event.preventDefault(); event.stopPropagation();" style="position: relative; display: inline-block; cursor: pointer; margin-left: 8px;">
-						<!-- <span style="background: #3498db; color: white; border-radius: 4px; padding: 0 5px; font-size: 12px;">i</span> -->
-						<span class="info-icon" center;>i</span>
-							<div class="lesson-popup">
-								<!-- <strong></strong><br> -->
-								${l.desc || 'Chưa có mô tả cho bài giảng này.'}
-							</div>
-						</span>
-
-			</span>
+			
+			
+		<div class="lesson-info-group">	
+			<span class="lesson-name">${l.name}</span>
+			<!-- Dòng giới thiệu nhập từ biến l.desc trong danh sách bài giảng -->
+			<div class="lesson-desc" style="font-size: 0.85em; color: #666; margin-top: 4px; font-style: italic;">
+                ${l.desc || 'Bấm để xem chi tiết bài học...'}
+				</div>
+			</div>	
 			
 			<span class="start-text"></span>
 		    
